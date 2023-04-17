@@ -5,6 +5,8 @@
 }
 
 .navbar {
+  position: fixed;  
+  top: 0;
   width: 100%;
   /* height: 10vh; */
   background-color: #ff5700;
@@ -22,9 +24,11 @@
   min-height: 80vh;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
+  /* grid-gap: 20px; */
   justify-items: center;
   padding: 10px;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
 
 img {
@@ -52,6 +56,8 @@ img:hover {
 }
 
 .footer {
+  position: fixed;
+  bottom: 0;
   width: 100%;
   /* height: 10vh; */
   padding: 10px;

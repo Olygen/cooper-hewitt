@@ -1,10 +1,1 @@
-            {data.map((poster) => (
-                <div key={poster.id} className="card">
-                {/* <div><img src={poster.images.n.url} alt="#"/></div> */}
-                <div className="card-description">
-                    <h6>{poster.participants.title_raw}</h6>    
-                    <h6>{`Decade: ${poster.decade}`}</h6> 
-                    <h6>{`Author: ${poster.person_name}`}</h6> 
-                </div>    
-                </div>
-            ))}
+            url:"https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=797ff896a5130139487d67a3bb49aa0f&query=poster"
