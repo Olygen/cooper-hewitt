@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Posters = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const apiKey = process.env.REACT_APP_API_KEY;
 
     useEffect (() => {
             setLoading(true);
         axios({
             method:"GET",
-            url:"https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=797ff896a5130139487d67a3bb49aa0f&query=poster"
+            // url:`https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=c5382bab87471b4bc0b5b52121ffc80a&query=poster`
+            url:`https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=${apiKey}&query=poster`
         }).then(res=> {
             console.log(res.data.objects)
             setData(res.data.objects)
@@ -32,7 +35,8 @@ const Posters = () => {
             .map((poster) => (
                 <div key={poster.id} className="card">
 
-                    {poster.images[0]?.n?.url ? (
+                    <Link to={`/details/${poster.id}`}>
+                        {poster.images[0]?.n?.url ? (
                         <div><img src={poster.images[0].n.url} alt="#"/></div>        
                     ) : poster.images[0]?.b?.url ? (
                         <div><img src={poster.images[0].b.url} alt="#"/></div>
@@ -43,10 +47,10 @@ const Posters = () => {
                     ) : poster.images[0]?.sq?.url ? (
                         <div><img src={poster.images[0].sq.url} alt="#"/></div>
                     ) : null}
-
+                    </Link>
 
                 <div className="card-description">
-                    <h6>{poster.title_raw}</h6>    
+                    <h3>{poster.title_raw}</h3>
                     <h6>{`Decade: ${poster.decade}`}</h6> 
                     {poster.participants[0]?.person_name ? (
                         <h6>{`Author: ${poster.participants[0].person_name}`}</h6>
