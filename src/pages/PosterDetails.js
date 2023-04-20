@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 export default function PosterDetails (props) {
     const apiKey = process.env.REACT_APP_API_KEY;
     //Grabbing the poster id from the URL Params
-    const { id } = useParams(); //doesn't allow to use poster.id
-    // Using this two variables to create URL
+    const { id } = useParams(); 
+    // Using this two variables to create URL. objects.getInfo method is used
     const url = `https://api.collection.cooperhewitt.org/rest/?method=cooperhewitt.objects.getInfo&access_token=${apiKey}&id=${id}`
 
     const [poster, setPoster] = useState(null)

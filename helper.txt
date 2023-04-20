@@ -1,0 +1,193 @@
+app.js
+
+import {useState} from "react";
+import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Posters from './pages/Posters';
+import PosterDetails from './pages/PosterDetails';
+import SearchResults from "./pages/SearchResults";
+
+function App() {
+  const apiKey = process.env.REACT_APP_API_KEY;
+
+  //State to hold poster data. Same as in PosterDetail
+  const [poster, setPoster] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
+
+  //Function to getPoster
+  const getPoster = async (searchTerm) => {
+    try {
+      if (!searchTerm) {
+        setPoster(null);
+        return;
+      }
+    //making fetch request and storing response. The search.objects method is used - same method with another query is used in Posters.js
+    const response = await fetch(
+      `https://api.collection.cooperhewitt.org/rest/?method=cooperhewitt.search.objects&access_token=${apiKey}&query=${searchTerm}`
+    );
+      // Parse JSON response into a javascript object
+      const data = await response.json();
+      // set the poster state
+      setPoster(data);
+      setSearchResults(data.objects);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  return (
+    <div className="App">
+
+  {/* and then we need to replace route for the page with search results*/}
+      <BrowserRouter>   
+        <Navbar /> 
+
+        <Routes>
+
+        {/* Using the posters prop to pass the search results to SearchResults. Then using conditional rendering to render the SearchResults component when searchResults is not null. */}
+        {searchResults ? (
+            <Route
+              path="/" element={<SearchResults posters={searchResults} />}
+            />
+          ) : (
+            <Route 
+            path='/' element={<Posters />}/>
+          )
+        }
+
+          {/* The :id of the poster will be the Param of the URL, a variable in the url. Need to access by using the useParams hook in PosterDetails page. If used in App.js useParam is not needed */}
+          <Route path="/details/:id" element={< PosterDetails/>}/>   
+
+        </Routes>
+        
+        <Footer />
+      </BrowserRouter>
+    </div>
+  );
+}
+
+export default App;
+
+SearchResults.js
+
+import { Link } from "react-router-dom";
+
+function SearchResults(props) {
+  const { posters } = props;
+  return (
+    <div>
+      {posters.map((poster) => (
+        <div key={poster.id}>
+          <Link to={`/details/${poster.id}`}>
+            <img src={poster.images[0].b.url} alt={poster.title} />
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default SearchResults;
+
+
+
+from app.js
+      {/*  <SearchResults searchTerm={searchTerm} /> */}
+
+        {/* Using the prop to pass the search results. Then using conditional rendering to render the SearchResults component when searchResults is not null instead of all posters. */}
+
+        {/* {SearchResults ? (
+            <Route
+              path="/" element={<SearchResults searchTerm={SearchResults} />}
+            />
+          ) : (
+            <Route path='/' element={<Posters />}/>
+          )
+        } */}
+
+        searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+
+        { searchTerm, setSearchTerm }
+            setSearchTerm(event.target.value);
+
+
+            import React, { useState, useEffect } from 'react';
+import '../App.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import SearchForm from '../components/SearchForm';
+
+import React, { useState, useEffect } from 'react';
+import '../App.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import SearchForm from '../components/SearchForm';
+
+const SearchResults = (props) => {
+
+const apiKey = process.env.REACT_APP_API_KEY;
+
+//State to hold poster data. Same as in PosterDetail
+const [loading, setLoading] = useState(false);
+const [poster, setPoster] = useState([]);
+
+
+        //making fetch request and storing response. The search.objects method is used - same method with predefined query is used in Posters.js        
+        useEffect (() => {
+                setLoading(true);
+            axios({
+                method:"GET",
+                url:`https://api.collection.cooperhewitt.org/rest/?method=cooperhewitt.search.objects&access_token=${apiKey}&query=${props.searchTerm}`
+            }).then(res=> {
+                console.log(res.poster.objects)
+                setPoster(res.poster.objects)
+            }).catch((error) => console.log(error))
+            .finally(() => setLoading(false))
+        },[props.searchTerm]);
+
+    return (
+        <div className="posters-container">
+            {loading && (
+                <div>
+                    {" "}
+                    <h1>Loading...</h1>
+                </div>
+            )}
+
+            {poster
+            .map((poster) => (
+                <div key={poster.id} className="card">
+
+                    <Link to={`/details/${poster.id}`}>
+                        {poster.images[0]?.n?.url ? (
+                        <div><img src={poster.images[0].n.url} alt="#"/></div>        
+                    ) : poster.images[0]?.b?.url ? (
+                        <div><img src={poster.images[0].b.url} alt="#"/></div>
+                    ) : poster.images[0]?.z?.url ? (
+                        <div><img src={poster.images[0].z.url} alt="#"/></div>
+                    ) : poster.images[0]?.d?.url ? (
+                        <div><img src={poster.images[0].d.url} alt="#"/></div>
+                    ) : poster.images[0]?.sq?.url ? (
+                        <div><img src={poster.images[0].sq.url} alt="#"/></div>
+                    ) : null}
+                    </Link>
+
+                    <div className="card-description">
+                        <h3>{poster.title_raw}</h3>
+                        <h6>{`Decade: ${poster.decade}`}</h6> 
+                        {poster.participants[0]?.person_name ? (
+                            <h6>{`Author: ${poster.participants[0].person_name}`}</h6>
+                        ) : (
+                            <h6>No name</h6>
+                        )}
+                    </div>    
+                </div>
+            ))
+            }
+
+        </div>
+    )
+};

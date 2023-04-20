@@ -1,17 +1,21 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-// import SearchForm from './SearchForm';
+import Searchform from './SearchForm';
 
-const Navbar = () => {
+const Navbar = ({ postersearch }) => {
+    
     return (
         <div className='navbar'>
             <ul>
                 <li><Link to="/">COOPER HEWITT <br/>posters collection</Link></li>
-                <li>Search</li>
-                {/* <li><SearchForm postersearch={postersearch}/></li> */}
+                <li>
+                {/* <Searchform postersearch={postersearch}/> */}
+                </li>
             </ul>
         </div>
         
-    )
+    );
 }
 
 export default Navbar;
+

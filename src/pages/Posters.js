@@ -12,8 +12,7 @@ const Posters = () => {
             setLoading(true);
         axios({
             method:"GET",
-            // url:`https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=c5382bab87471b4bc0b5b52121ffc80a&query=poster`
-            url:`https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=${apiKey}&query=poster`
+               url:`https://api.collection.cooperhewitt.org/rest/?per_page=100&method=cooperhewitt.search.objects&access_token=${apiKey}&query=poster`
         }).then(res=> {
             console.log(res.data.objects)
             setData(res.data.objects)
